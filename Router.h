@@ -6,30 +6,29 @@
 #define ROUTER_ROUTERUTILS_H
 #include "RoutingTable.h"
 #include "MensajeFisico.h"
+#include "RouterInterface.h"
 #include <iostream>
 #include <list>
 #include <mutex>
+#include <thread>
 
 using namespace std;
 
 class Router {
 private:
     RoutingTable* routingTable;
-    //actualmente asume 2 interfaces, se puede cambiar por mapa
-    list<MensajeFisico> legosQueue;
-    list<MensajeFisico> lucesQueue;
-    bool isRouterOn;
+    map<char*,RouterInterface*> routerInterfaces;
+    bool routerOn;
 
 public:
     Router();
     RoutingTable* getRoutingTable();
-    list<MensajeFisico> getLegosQueue();
-    list<MensajeFisico> getLucesQueue();
-    bool routerOn();
     void setRouterOff();
 
 
     int i;
+
+    void run();
 };
 
 

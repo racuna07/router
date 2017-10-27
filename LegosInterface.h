@@ -13,12 +13,13 @@ using namespace std;
 class LegosInterface : public RouterInterface {
 private:
     Router* routerUtils;
+    char *id;
+    list<MensajeFisico> messageQueue;
 
 public:
-    LegosInterface(Router* routerUtils);
+    LegosInterface(char* id,Router* routerUtils);
     void run();
-
-
-
+    char* getId();
+    list<MensajeFisico>* getInterfaceQueue();
 };
 #endif //ROUTER_LEGOSTHREAD_H

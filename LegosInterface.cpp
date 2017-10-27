@@ -13,7 +13,16 @@ void LegosInterface::run(){
 
 
 
-LegosInterface::LegosInterface(Router *routerUtils) {
+LegosInterface::LegosInterface(char* id,Router *routerUtils) {
     this->routerUtils = routerUtils;
+    this->id = id;
 
+}
+
+char *LegosInterface::getId() {
+    return id;
+}
+
+list<MensajeFisico>* LegosInterface::getInterfaceQueue() {
+    return &messageQueue;
 }

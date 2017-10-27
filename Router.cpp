@@ -1,31 +1,34 @@
 //
 // Created by rodrigo on 24/10/17.
 //
-
 #include "Router.h"
+#include "LegosInterface.h"
+#include "LucesInterface.h"
 
 Router::Router() {
-    this->isRouterOn = true;
+    this->routerOn = true;
+    this->routerInterfaces["legos"] = new LegosInterface("legos",this);
+    this->routerInterfaces["luces"] = new LucesInterface("luces", this);
 }
 
 RoutingTable *Router::getRoutingTable() {
     return this->routingTable;
 }
 
-list<MensajeFisico> Router::getLegosQueue() {
-    return this->legosQueue;
-
-}
-
-list<MensajeFisico> Router::getLucesQueue() {
-    return this->lucesQueue;
-}
-
-bool Router::routerOn() {
-    return isRouterOn;
-}
 
 void Router::setRouterOff() {
-    this->isRouterOn = false;
+    this->routerOn = false;
+}
+
+void Router::run() {
+    while(routerOn){
+        map<char*,RouterInterface*>::iterator it = routerInterfaces.begin();
+        while (it != routerInterfaces.end()) {
+            RouterInterface* interface = routerInterfaces[(it++)->first];
+            thread interfaceThread(&RouterInterface::run,interface);
+            interfaceThread.join();
+        }
+    }
+
 }
 
