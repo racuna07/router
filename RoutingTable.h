@@ -18,11 +18,11 @@ struct TableEntry{
 class RoutingTable{
 private:
     bool isTableSet;
-    map<char*,TableEntry> table;
+    map<char*,TableEntry*> table;
 public:
     RoutingTable();
-    TableEntry getTableEntry(char*ip);
-    void putTableEntry(TableEntry);
+    TableEntry* getTableEntry(char*ip);
+    void putTableEntry(TableEntry*);
     virtual void setRoutingTable();
 
 };

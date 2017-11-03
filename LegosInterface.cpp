@@ -23,6 +23,6 @@ char *LegosInterface::getId() {
     return id;
 }
 
-list<MensajeFisico>* LegosInterface::getInterfaceQueue() {
+list<MensajeRed>* LegosInterface::getInterfaceQueue() {
     return &messageQueue;
 }

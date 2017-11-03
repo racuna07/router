@@ -14,12 +14,12 @@ class LegosInterface : public RouterInterface {
 private:
     Router* routerUtils;
     char *id;
-    list<MensajeFisico> messageQueue;
+    list<MensajeRed> messageQueue;
 
 public:
     LegosInterface(char* id,Router* routerUtils);
     void run();
     char* getId();
-    list<MensajeFisico>* getInterfaceQueue();
+    list<MensajeRed>* getInterfaceQueue();
 };
 #endif //ROUTER_LEGOSTHREAD_H

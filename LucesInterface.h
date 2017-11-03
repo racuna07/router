@@ -22,7 +22,7 @@ public:
         cout<<"luces: "<<routerUtils->i++<<"."<<endl;
     }
     char * getId(){return nullptr;}
-    list<MensajeFisico>* getInterfaceQueue(){ return nullptr;}
+    list<MensajeRed>* getInterfaceQueue(){ return nullptr;}
 
 
 };

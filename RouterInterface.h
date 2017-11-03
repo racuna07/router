@@ -16,6 +16,6 @@ class RouterInterface{
 public:
     virtual void run() = 0;
     virtual char* getId() = 0;
-    virtual list<MensajeFisico>* getInterfaceQueue() = 0;
+    virtual list<MensajeRed>* getInterfaceQueue() = 0;
 };
 #endif //ROUTER_ROUTERINTERFACE_H
