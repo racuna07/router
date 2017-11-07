@@ -7,6 +7,7 @@
 
 Router::Router() {
     this->routerOn = true;
+    this->routingTable = new RoutingTable();
     this->routerInterfaces["legos"] = new LegosInterface("legos",this);
     this->routerInterfaces["luces"] = new LucesInterface("luces", this);
 }
