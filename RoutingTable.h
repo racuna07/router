@@ -6,6 +6,7 @@
 #define ROUTER_ROUTINGTABLE_H
 #include <iostream>
 #include <map>
+#include <cstring>
 
 using namespace std;
 
@@ -14,11 +15,18 @@ struct TableEntry{
     unsigned int distance;
     char* interface;
 };
+struct cmp_str
+{
+    bool operator()(char const *a, char const *b)
+    {
+        return std::strcmp(a, b) < 0;
+    }
+};
 
 class RoutingTable{
 private:
     bool isTableSet;
-    map<char*,TableEntry*> table;
+    map<char*,TableEntry*,cmp_str> table;
 public:
     RoutingTable();
     TableEntry* getTableEntry(char*ip);
