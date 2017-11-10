@@ -13,6 +13,8 @@ private:
     int socketDescriptor;
     int socketType;
     bool ipv6;
+    char* ip;
+    int port;
 public:
     Socket();
     Socket(char t, bool ipv6);
@@ -20,7 +22,7 @@ public:
     ~Socket();
     //Metodos de Servidor.
     int Listen(int queue);
-    int Bind(int port);
+    int Bind(char *port, int i);
     Socket* Accept();
     //Metodos Cliente.
     int Connect(char* host, int port);
@@ -29,6 +31,8 @@ public:
     int Write(char* text, int len);
     int Shutdown(int);
     int Close();
+    char* getSocketIp();
+    int getSocketPort();
 
 };
 

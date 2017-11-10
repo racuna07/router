@@ -15,11 +15,11 @@ struct TableEntry{
     unsigned int distance;
     char* interface;
 };
-struct cmp_str
-{
+//Obtenido de stackoverflow
+struct cmp_str {
     bool operator()(char const *a, char const *b)
     {
-        return std::strcmp(a, b) < 0;
+        return strcmp(a, b) < 0;
     }
 };
 

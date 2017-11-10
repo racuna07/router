@@ -157,7 +157,7 @@ int Socket::Listen(int queue) {
     return result;
 }
 
-int Socket::Bind(int port) {
+int Socket::Bind(char *ip, int port) {
     int result = -1;
     if(socketType==SOCK_STREAM){
         struct sockaddr_in server_addr;
@@ -167,11 +167,28 @@ int Socket::Bind(int port) {
         else{
             server_addr.sin_family = AF_INET;
         }
-        server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+        //Set bind ip.
+        if(ip){
+            server_addr.sin_addr.s_addr = inet_addr(ip);
+        }
+        else{
+
+        }
+        //Set bind port.
         server_addr.sin_port = htons(port);
-        socklen_t len = sizeof(server_addr);
+        server_addr.sin_addr.s_addr = htonl(INADDR_ANY);
+        int len=sizeof(server_addr);
         if((result = bind(socketDescriptor,(const sockaddr*)&server_addr,len))==0){
-            cout<<"Se ejecuto bind() con exito en el puerto "<<port<<"."<<endl;
+            this->port = port;
+            struct sockaddr* server;
+            socklen_t serverLen = sizeof(server);
+            if(getsockname(socketDescriptor,server,&serverLen)!=0){
+                cout<<"Error obteniendo ip de Socket"<<endl;
+            }
+            struct sockaddr_in *serverIp = (struct sockaddr_in *)&server;
+            this->ip = new char[INET_ADDRSTRLEN];
+            inet_ntop(AF_INET, &(serverIp->sin_addr), this->ip, INET_ADDRSTRLEN);
+            cout<<"Se ejecuto bind() con exito en el ip: "<<this->ip<<", puerto: "<<this->port<<"."<<endl;
         }
         else{
             cout<<"Error al ejecutar bind() en el puerto "<<port<<"."<<endl;
@@ -188,4 +205,12 @@ Socket::Socket(int socketDescriptor, int socketType, bool ipv6) {
     this->socketDescriptor = socketDescriptor;
     this->socketType = socketType;
     this->ipv6 = ipv6;
+}
+
+char *Socket::getSocketIp() {
+    return this->ip;
+}
+
+int Socket::getSocketPort() {
+    return this->port;
 }
