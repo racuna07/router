@@ -4,6 +4,10 @@
 
 #ifndef UNTITLED_LEGOSUTILS_H
 #define UNTITLED_LEGOSUTILS_H
+#define DISPATCHER_IP "127.0.0.1"
+#define DISPATCHER_PORT 8085
+#define PHYSICAL_NETWORK_MSIZE 1560
+#define MAX_QUEUE_SIZE 100
 
 struct PhysicalLayerMessage{
     int messageType;
@@ -27,11 +31,14 @@ struct NetworkMessage{
 
 class LegosUtils {
 public:
+    LegosUtils();
     char* getStringAsIp(char*);
     char* getIpAsString(char*);
     PhysicalLayerMessage* unpackPhysicalMessage(char*);
-    DispatcherTableEntry *unpackDispatcherTableEntry(char *buffer);
-    NetworkMessage *unpackNetworkMessage(char *string);
+    NetworkMessage *unpackNetworkMessage(char *);
+    char* getDispatcherRegistryMessage(char *logicalIp, char *macAddress, char *realIP, int realPort);
+
+    char *getDispatcherRequestMessage(char *logicalIp, char *macAddress);
 };
 
 

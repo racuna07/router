@@ -8,7 +8,7 @@
 Router::Router() {
     this->routerOn = true;
     this->routingTable = new RoutingTable();
-    this->routerInterfaces["legos3"] = new LegosInterface("legos3",this);
+    this->routerInterfaces["legos3"] = new LegosInterface(this,"200.200.200.200","legos3","255.255.255.255",8080);
     this->routerInterfaces["luces"] = new LucesInterface("luces", this);
 }
 

@@ -19,10 +19,10 @@ public:
     }
 
     void run(){
-        cout<<"luces: "<<routerUtils->i++<<"."<<endl;
+        /*cout<<"luces: "<<routerUtils->i++<<"."<<endl;
         if(routerUtils->i==1000){
             routerUtils->setRouterOff();
-        }
+        }*/
     }
     char * getId(){return nullptr;}
     list<MensajeRed>* getInterfaceQueue(){ return nullptr;}

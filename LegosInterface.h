@@ -8,6 +8,7 @@
 #include "RouterInterface.h"
 #include "RoutingTable.h"
 #include "ListenerThread.h"
+#include "Definitions.h"
 
 using namespace std;
 
@@ -17,47 +18,32 @@ using namespace std;
 
 class LegosInterface : public RouterInterface {
 public:
-    LegosInterface(char* id,Router* routerUtils);
+    LegosInterface(Router *routerUtils, char *logicalIp,char *id, char *realIp, int realPort);
     void run();
     char* getId();
     list<MensajeRed>* getInterfaceQueue();
-    char* getIpAsString(char ip[]);
-    char* getStringAsIp(char*);
 
-    struct DispatcherMessage{
-        char messageType;
-        char macAddress[7];
-        char* realIp;
-        int realPort;
-    };
-    struct arpEntry{
-        char ipMentira[4];
-        char macAddress[7];
-        char* ipAddress;
-        char* realIp;
-        int realPort;
-    };
+
 private:
     Router* routerUtils;
+    LegosUtils* legosUtils;
     char * interfaceId;
-    const char * logicalIp;
+    char  logicalIp[IP_SIZE];
     list<MensajeRed> messageQueue;
-    //Interface registers with dispatcher so that other nodes know its physical layer address.
-    const char* dispatcherAddressIp;
-    int dispatcherAddressPort;
-    void dispatcherRegistry();
-
     //Address of the socket that listens for messages for this interface
-    const char* ownRealIp;
+    char ownRealIp[IP_SIZE];
     int ownRealPort;
+    //Interface registers with dispatcher so that other nodes know its physical layer address.
+    void dispatcherRegistry();
+    //Listener Thread
+    ListenerThread* listenerThread;
 
     //Address Resolution Protocol Cache Table
-    map<char*,arpEntry,cmp_str> arpTable;
+    //map<char*,arpEntry,cmp_str> arpTable;
 
     void writeMessage(char*,int,char*);
 
-    //Listener Thread
-    ListenerThread* listenerThread;
+
 
 
 };

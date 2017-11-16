@@ -12,36 +12,38 @@
 
 void LegosInterface::run(){
     cout<<"legos: "<<routerUtils->i<<endl;
-    /*//Si hay mensajes Fisicos
-    PhysicalLayerMessage* physicalLayerMessage = listenerThread->getMessage();
-    if(physicalLayerMessage){
-
-    }*/
-
+    struct PhysicalLayerMessage* message = listenerThread->getMessage();
+    if(message){
+        cout<<"Tipo: "<<message->messageType<<endl;
+        cout<<"MacFuente: "<<message->macFuente<<endl;
+        cout<<"MacDestino: "<<message->macDestino<<endl;
+        cout<<"TableEntry logicalIp: "<<((DispatcherTableEntry*)message->payload)->logicalIp<<endl;
+        cout<<"TableEntry realIp: "<<((DispatcherTableEntry*)message->payload)->realIp<<endl;
+        cout<<"TableEntry port: "<<((DispatcherTableEntry*)message->payload)->port<<endl;
+    }
+    //char* string1 = legosUtils->getDispatcherRequestMessage(logicalIp,interfaceId);
+    //writeMessage(DISPATCHER_IP,DISPATCHER_PORT,string1);
 
 }
 
 
 
-LegosInterface::LegosInterface(char* id,Router *routerUtils) {
+LegosInterface::LegosInterface(Router *routerUtils, char *logicalIp,char *id, char *realIp, int realPort) {
     this->routerUtils = routerUtils;
+    this->legosUtils = new LegosUtils();
     this->interfaceId = id;
-    //DispatcherAddress
-    this->dispatcherAddressIp = "10.1.130.70";
-    this->dispatcherAddressPort = 8080;
+    //LogicalAddress
+    strncpy(this->logicalIp,logicalIp,IP_SIZE);
     //OwnAddress
-    this->ownRealIp = "200.200.200.200";
-    this-> ownRealPort = 8080;
+    strncpy(ownRealIp,realIp,IP_SIZE);
+    this-> ownRealPort = realPort;
     //Create Listener.
     this->listenerThread = new ListenerThread((char*)this->ownRealIp,this->ownRealPort);
     thread listener(&ListenerThread::run,listenerThread);
+    //Keep listening to messages
     listener.detach();
-
-
-
     //Register with Dispatcher.
     this->dispatcherRegistry();
-
 }
 
 char *LegosInterface::getId() {
@@ -49,26 +51,14 @@ char *LegosInterface::getId() {
 }
 
 list<MensajeRed>* LegosInterface::getInterfaceQueue() {
+    //TODO limitar tamano
     return &messageQueue;
 }
 
-char* LegosInterface::getIpAsString(char *ip) {
-    char* buffer = new char[8];
-    sprintf(buffer,"%i.%i.%i.%i",ip[0],ip[1],ip[2],ip[3]);
-    return buffer;
-}
-
-char *LegosInterface::getStringAsIp(char * string) {
-    char* result = new char[4];
-    char* first = strtok(string,".");result[0]= (char)atoi(first);
-    char* second = strtok(NULL,"."); result[1]= (char)atoi(second);
-    char* third = strtok(NULL,"."); result[2]= (char)atoi(third);
-    char* forth = strtok(NULL,"."); result[3]= (char)atoi(forth);
-    return result;
-}
 
 void LegosInterface::dispatcherRegistry() {
-    writeMessage((char*)dispatcherAddressIp,dispatcherAddressPort,"0;legos3;legos0;200.5.0.25;legos1;255.255.255.255;8080;");
+    char* message = legosUtils->getDispatcherRegistryMessage(logicalIp,interfaceId,ownRealIp,ownRealPort);
+    writeMessage(DISPATCHER_IP,DISPATCHER_PORT,message);
 }
 
 void LegosInterface::writeMessage(char* ip,int port, char * message) {
@@ -76,10 +66,9 @@ void LegosInterface::writeMessage(char* ip,int port, char * message) {
     int connectionResult = s.Connect( ip, port );
     if(connectionResult==0) {
         s.Write(message, PHYSICAL_NETWORK_MSIZE);
-        cout<<"mensaje enviado"<<endl;
     }
     else{
-        cout<<"No se pudo enviar el mensaje"<<endl;
+        cout<<"Error al enviar el mensaje."<<endl;
     }
 }
 
